@@ -1,105 +1,110 @@
 #include "main.h"
 
 /**
- * _strlen - function to return the length of string
- * @str: string passed to check length
+ * _strdup - duplicates a string in memory
+ * @str: string to duplicate
  *
- * Return: length of string
+ * Return: pointer to duplicate of the string
  */
-size_t _strlen(const char *str)
+char *_strdup(const char *str)
 {
-	size_t len = 0;
+	char *new_str;
+	size_t i, length;
 
-	while (str[len] != '\0')
+	if (str == NULL)
+		return (NULL);
+	length = _strlen(str);
+	new_str = malloc(sizeof(char) * (length + 1));
+	if (new_str == NULL)
+		return (NULL);
+	for (i = 0; i < length; i++)
+		new_str[i] = str[i];
+	new_str[i] = '\0';
+	return (new_str);
+}
+
+
+/**
+ * _strcpy - copies the contents of one string to another string
+ * @dest: destination string
+ * @src: source string
+ *
+ * Return: destination string
+ */
+char *_strcpy(char *dest, const char *src)
+{
+	size_t i = 0;
+
+	if (dest == NULL || src == NULL)
+		return (NULL);
+	while (src[i] != '\0')
 	{
-		len++;
+		dest[i] = src[i];
+		i++;
 	}
+	dest[i] = '\0';
+	return (dest);
+}
 
-	return (len);
+
+/**
+ * _strtok - cuts a string into tokens based on a specified delimiter
+ * @string: string to be tokenized
+ * @delim: string used as delimiter
+ *
+ * Return: token (Success) or NULL (fail)
+ */
+char *_strtok(char *string, const char *delim)
+{
+	static char *input;
+	char *token = NULL;
+	size_t i = 0;
+
+	if (string != NULL)
+		input = string;
+	if (input == NULL)
+		return (NULL);
+	while (input[i] == *delim && input[i] != '\0')
+		input = &input[i + 1];
+	if (input[i] != '\0')
+		token = input;
+	while (input[i] != *delim && input[i] != '\0')
+		i++;
+	if (input[i] != '\0' && input[i + 1] != '\0')
+	{
+		input[i] = '\0';
+		input = &input[i + 1];
+	}
+	else
+	{
+		input[i] = '\0';
+		input = NULL;
+	}
+	return (token);
 }
 
 /**
- * _strcat - function to concatenate
- * @str1: the string to append
- * @str2: string to be joined
+ * _strncat - appends a number of character of a string to another
+ * @dest: destination string
+ * @src: source string
+ * @count: specified number
  *
- * Return: the concatenated string
+ * Return: pointer to the appended string
  */
-char *_strcat(char *str1, const char *str2)
+char *_strncat(char *dest, const char *src, size_t count)
 {
 	size_t i = 0, j = 0;
 
-	while (str1[i] != '\0')
+	while (dest[i] != '\0')
 		i++;
 
-	while (str2[j] != '\0')
+	while (j < count && src[j] != '\0')
 	{
-		str1[i] = str2[j];
+		dest[i] = src[j];
+		i++;
 		j++;
-		i++;
 	}
+	dest[i] = '\0';
 
-	return (str1);
-}
-
-/**
- * _strcmp - function to compare strings
- * @str1: first string
- * @str2: second string
- *
- * Return: difference between both string
- */
-int _strcmp(const char *str1, const char *str2)
-{
-	int i = 0;
-
-	while ((str1[i] != '\0' && str2[i] != '\0') && (str1[i] == str2[i]))
-		i++;
-
-	if (str1[i] == str2[i])
-		return (0);
-	else
-		return (str1[i] - str2[i]);
-}
-
-/**
- * _atoi - function to convert string to integer
- * @str: string to be converted
- *
- * Return: integer gotten
- */
-int _atoi(const char *str)
-{
-	int num = 0, i = 0;
-	int sign = 1;
-
-	while (str[i] != '\0')
-	{
-		if (str[i] >= '0' && str[i] <= '9')
-		{
-			num = (num * 10) + (str[i] - '0');
-
-			if (str[i + 1] == ' ')
-				break;
-		}
-
-		else if (str[i] == '-')
-			sign *= -1;
-		i++;
-	}
-
-	return (num * sign);
-}
-
-/**
- * _puts - function to print strings to std input
- * @str: character to print out
- *
- * Return: character printed out
- */
-ssize_t _puts(const char *str)
-{
-	size_t len = _strlen(str);
-
-	return (write(1, str, len));
+	return (dest);
 }
